@@ -6,6 +6,27 @@ require 'cgi'
 require 'json'
 include REXML
 
+get '/test/*' do
+  JSON.dump({
+    :citations => [ 
+                   { 
+                     :title => "Article 1",
+                     :journal_title => "Journal Title",
+                     :year => "2010",
+                     :authors => "A. Name, Another Name",
+                     :doi => "10.10/blah"
+                   },
+                   {
+                     :title => "Article 2",
+                     :journal_title => "Journal Title",
+                     :year => "2009",
+                     :authors => "A. Name, Another Name",
+                     :doi => "10.10/blah2"
+                   }
+                  ]
+  })
+end
+
 get '/*' do
   doi = params['splat'].join('/')
   doi = CGI.unescape(doi)
@@ -33,19 +54,19 @@ get '/*' do
   JSON.dump jsonTop
 end
 
-def getJournalTitle(elem) do
+def getJournalTitle(elem)
   elem.elements["journal_title"].text
 end
 
-def getTitle(elem) do
+def getTitle(elem)
   elem.elements["article_title"].text
 end
 
-def getYear(elem) do
+def getYear(elem)
   elem.elements["year"].text
 end
 
-def getAuthors(elem) do
+def getAuthors(elem)
   authors = ""
   elem.elements.each("contributors/author") do |author|
     authors += author.text + ", "
@@ -53,6 +74,6 @@ def getAuthors(elem) do
   authors
 end
 
-def getDoi(elem) do
+def getDoi(elem)
   elem.elements["doi"].text
 end

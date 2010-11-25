@@ -1,6 +1,6 @@
 function CitedBy(elementIdOrNode, additional) {
 
-    this.queryUrlFragment = "http://localhost/"
+    this.queryUrlFragment = "http://localhost:9393/test/"
     this.abortTimeout = 15 * 1000
     this.parentNode = undefined
     this.doi = undefined
@@ -48,10 +48,10 @@ function CitedBy(elementIdOrNode, additional) {
 
 	var req = new XMLHttpRequest
 	req.open('GET', this.queryUrlFragment + this.doi, true)
-	req.onreadystatechange = function(r) {
+	req.onreadystatechange = function() {
 	    if (req.readyState == 4) {
-		if (r.responseText) {
-		    cb.fillWithResponse(r.responseText)
+		if (req.responseText) {
+		    cb.fillWithResponse(req.responseText)
 		} else {
 		    cb.fillWithFailure('Error: CrossRef Cited-by query response is empty.')
 		}
@@ -60,21 +60,23 @@ function CitedBy(elementIdOrNode, additional) {
 
 	req.send()
 
-	window.setTimeout(function() {
-	    if (req.readyState != 4) {
-		req.abort()
-		cb.fillWithFailure('Error: CrossRef Cited-by query is not responding.')
-	    }
-	}, this.abortTimeout)
+	// window.setTimeout(function() {
+	//     if (req.readyState != 4) {
+	// 	req.abort()
+	// 	cb.fillWithFailure('Error: CrossRef Cited-by query is not responding.')
+	//     }
+	// }, this.abortTimeout)
     }
 
     CitedBy.prototype.fillWithResponse = function(responseData) {
+	var evaledResponse = eval("( " + responseData + " )")
+
 	if (responseData.error) {
-	    this.fillWithFailure(responseData.error)
+	    this.fillWithFailure(evaledResponse)
 	} else {
 	    var citationsHtml = ''
 
-	    if (responseData.citations.length == 0) {
+	    if (evaledResponse.citations.length == 0) {
 		citationsHtml = (
 		    '<div id="citedby-none">' +
 		    'There are no CrossRef Cited-by links for this article.' +
@@ -83,7 +85,8 @@ function CitedBy(elementIdOrNode, additional) {
 	    } else {
 	        var citationsHtml = '<div id="citedby-citations">'
 
-		for (var c in responseData.citations) {
+		for (var idx in evaledResponse.citations) {
+		    var c = evaledResponse.citations[idx]
 		    citationsHtml += (
 			'<div class="citedby-citation">' +
 			'<span class="citedby-title">' + c.title + '</span>' +

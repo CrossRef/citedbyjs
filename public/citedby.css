@@ -1,13 +1,18 @@
-#citedby-citations {
-  color: blue;
+#citedby-citations > * {
+  padding: 4px;
 }
 
 #citedby-error {
-  color: red;
+  font-color: darkred;
 }
 
 #citedby-none {
-  color: green;
+  font-color: darkgrey;
+}
+
+#citedby-loading {
+  font-style: italic;
+  font-color: darkgrey;
 }
 
 #citedby-next {
@@ -16,10 +21,8 @@
 #citedby-previous {
 }
 
-.citedby-citation {
-}
-
-.citedby-loading {
+.citedby-citation > * {
+  padding: 0px 4px;
 }
 
 .citedby-title {
@@ -29,12 +32,14 @@
 }
 
 .citedby-journal-title {
+  font-style: italic;
 }
 
 .citedby-year {
+  font-style: italic;
+  font-weight: bold;
 }
 
 .citedby-doi {
+  font-weight: bold;
 }
-
-

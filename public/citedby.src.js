@@ -90,11 +90,11 @@ function CitedBy(elementIdOrNode, additional) {
 		    citationsHtml += (
 			'<div class="citedby-citation">' +
 			'<span class="citedby-title">' + c.title + '</span>' +
-			'<span class="citedby-authors">' + c.authors + '</span>' +
-			'<span class="citedby-year">' + c.year + '</span>' +
+			'<span class="citedby-year">' + c.year + ',</span>' +
 			'<span class="citedby-journal-title">' + 
                             c.journal_title + 
                         '</span>' +
+			'<span class="citedby-authors">' + c.authors + '</span>' +
 			'<a class="citedby-doi" href="http://dx.doi.org/' + c.doi + '">' + 
 			    c.doi +
 			'</a>' +

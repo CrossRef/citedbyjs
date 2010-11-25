@@ -1,35 +1,40 @@
-citedby-citation {
+#citedby-citations {
   color: blue;
 }
 
-citedby-error {
+#citedby-error {
   color: red;
 }
 
-citedby-none {
+#citedby-none {
   color: green;
 }
 
-citedby-loading {
+#citedby-next {
 }
 
-citedby-title {
+#citedby-previous {
 }
 
-citedby-authors {
+.citedby-citation {
 }
 
-citedby-journal-title {
+.citedby-loading {
 }
 
-citedby-year {
+.citedby-title {
 }
 
-citedby-doi {
+.citedby-authors {
 }
 
-citedby-next {
+.citedby-journal-title {
 }
 
-citedby-previous {
+.citedby-year {
 }
+
+.citedby-doi {
+}
+
+

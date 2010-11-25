@@ -76,15 +76,16 @@ function CitedBy(elementIdOrNode, additional) {
 
 	    if (responseData.citations.length == 0) {
 		citationsHtml = (
-		    '<div class="citedby-none">' +
+		    '<div id="citedby-none">' +
 		    'There are no CrossRef Cited-by links for this article.' +
 		    '</div>'
 		)
 	    } else {
-	        var citationsHtml = '<div class="citedby-citation">'
+	        var citationsHtml = '<div id="citedby-citations">'
 
 		for (var c in responseData.citations) {
 		    citationsHtml += (
+			'<div class="citedby-citation">' +
 			'<span class="citedby-title">' + c.title + '</span>' +
 			'<span class="citedby-authors">' + c.authors + '</span>' +
 			'<span class="citedby-year">' + c.year + '</span>' +
@@ -93,7 +94,8 @@ function CitedBy(elementIdOrNode, additional) {
                         '</span>' +
 			'<a class="citedby-doi" href="http://dx.doi.org/' + c.doi + '">' + 
 			    c.doi +
-			'</a>'
+			'</a>' +
+			'</div>'
 		    )
 		}
 
@@ -109,7 +111,7 @@ function CitedBy(elementIdOrNode, additional) {
     }
 
     CitedBy.prototype.fillWithFailure = function(message) {
-    	this.parentNode.innerHTML = '<div class="citedby-error">' + message + '</div>'
+    	this.parentNode.innerHTML = '<div id="citedby-error">' + message + '</div>'
 	
     	if (this.onFailure) {
     	    this.onFailure()

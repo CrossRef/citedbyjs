@@ -8,23 +8,80 @@ include REXML
 
 get '/test/*' do
   JSON.dump({
-    :citations => [ 
-                   { 
-                     :title => "Article 1",
-                     :journal_title => "Journal Title",
-                     :year => "2010",
-                     :authors => "A. Name, Another Name",
-                     :doi => "10.10/blah"
-                   },
-                   {
-                     :title => "Article 2",
-                     :journal_title => "Journal Title",
-                     :year => "2009",
-                     :authors => "A. Name, Another Name",
-                     :doi => "10.10/blah2"
-                   }
-                  ]
-  })
+              :citations => [ 
+                             { 
+                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
+                               :journal_title => "New Journal of Physics",
+                               :year => "1999",
+                               :authors => "F Oesterhelt, M Rief and H E Gaub",
+                               :doi => "10.1088/1367-2630/1/1/006"
+                             },
+                             {
+                               :title => "Metal nanoparticles and their assemblies",
+                               :journal_title => "Chemical Society Reviews",
+                               :year => "2000",
+                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
+                               :doi => "10.1039/a904518j"
+                             },
+                             { 
+                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
+                               :journal_title => "New Journal of Physics",
+                               :year => "1999",
+                               :authors => "F Oesterhelt, M Rief and H E Gaub",
+                               :doi => "10.1088/1367-2630/1/1/006"
+                             },
+                             {
+                               :title => "Metal nanoparticles and their assemblies",
+                               :journal_title => "Chemical Society Reviews",
+                               :year => "2000",
+                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
+                               :doi => "10.1039/a904518j"
+                             },
+                             { 
+                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
+                               :journal_title => "New Journal of Physics",
+                               :year => "1999",
+                               :authors => "F Oesterhelt, M Rief and H E Gaub",
+                               :doi => "10.1088/1367-2630/1/1/006"
+                             },
+                             {
+                               :title => "Metal nanoparticles and their assemblies",
+                               :journal_title => "Chemical Society Reviews",
+                               :year => "2000",
+                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
+                               :doi => "10.1039/a904518j"
+                             },
+                             { 
+                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
+                               :journal_title => "New Journal of Physics",
+                               :year => "1999",
+                               :authors => "F Oesterhelt, M Rief and H E Gaub",
+                               :doi => "10.1088/1367-2630/1/1/006"
+                             },
+                             {
+                               :title => "Metal nanoparticles and their assemblies",
+                               :journal_title => "Chemical Society Reviews",
+                               :year => "2000",
+                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
+                               :doi => "10.1039/a904518j"
+                             },
+                             { 
+                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
+                               :journal_title => "New Journal of Physics",
+                               :year => "1999",
+                               :authors => "F Oesterhelt, M Rief and H E Gaub",
+                               :doi => "10.1088/1367-2630/1/1/006"
+                             },
+                             {
+                               :title => "Metal nanoparticles and their assemblies",
+                               :journal_title => "Chemical Society Reviews",
+                               :year => "2000",
+                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
+                               :doi => "10.1039/a904518j"
+                             }
+                            ],
+              :has_more => true
+            })
 end
 
 get '/*' do

@@ -1,6 +1,8 @@
 function CitedBy(elementIdOrNode, additional) {
 
     this.queryUrlFragment = "http://localhost:9393/test/"
+    this.queryOffset = 0
+    this.queryLimit = 50
     this.abortTimeout = 15 * 1000
     this.parentNode = undefined
     this.doi = undefined
@@ -9,8 +11,9 @@ function CitedBy(elementIdOrNode, additional) {
 
     CitedBy.prototype.start = function() {
 	if (additional) {
-	    this.onSuccess = additional.onSuccess
-	    this.onFailure = additional.onFailure
+	    this.onSuccess = additional.onSuccess || this.onSuccess
+	    this.onFailure = additional.onFailure || this.onFailure
+	    this.queryLimit = additional.queryLimit || this.queryLimit
 	}
 	    
 	if (document.getElementById(elementIdOrNode)) {
@@ -89,15 +92,19 @@ function CitedBy(elementIdOrNode, additional) {
 		    var c = evaledResponse.citations[idx]
 		    citationsHtml += (
 			'<div class="citedby-citation">' +
-			'<span class="citedby-title">' + c.title + '</span>' +
-			'<span class="citedby-year">' + c.year + ',</span>' +
+			'<div class="citedby-title">' + c.title + '</div>' +
+			'<div>' +
+                        '<span class="citedby-year">' + c.year + ',</span>' +
 			'<span class="citedby-journal-title">' + 
                             c.journal_title + 
                         '</span>' +
-			'<span class="citedby-authors">' + c.authors + '</span>' +
 			'<a class="citedby-doi" href="http://dx.doi.org/' + c.doi + '">' + 
 			    c.doi +
 			'</a>' +
+			'</div>' +
+			'<div>' +
+                            '<span class="citedby-authors">' + c.authors + '</span>' +
+                        '</div>' +
 			'</div>'
 		    )
 		}

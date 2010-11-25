@@ -1,5 +1,5 @@
 #citedby-citations > * {
-  padding: 4px;
+  padding: 6px;
 }
 
 #citedby-error {
@@ -21,8 +21,12 @@
 #citedby-previous {
 }
 
-.citedby-citation > * {
-  padding: 0px 4px;
+.citedby-citation span {
+  margin-right: 4px;
+}
+
+.citedby-citation a {
+  margin-left: 10px;
 }
 
 .citedby-title {
@@ -45,15 +49,15 @@
 
 .citedby-doi {
   font-weight: bold;
+  color: grey;
+  font-style:underline;
 }
 
 .citedby-doi:visited {
-  font-style: underline;
   color: grey;
 }
 
 .citedby-doi:active {
-  font-style: underline;
   color: grey;
 }
 

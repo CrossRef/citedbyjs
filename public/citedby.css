@@ -3,16 +3,16 @@
 }
 
 #citedby-error {
-  font-color: darkred;
+  color: darkred;
 }
 
 #citedby-none {
-  font-color: darkgrey;
+  color: darkgrey;
 }
 
 #citedby-loading {
   font-style: italic;
-  font-color: darkgrey;
+  color: darkgrey;
 }
 
 #citedby-next {
@@ -29,17 +29,35 @@
 }
 
 .citedby-authors {
+  color: grey;
 }
 
 .citedby-journal-title {
   font-style: italic;
+  color: grey;
 }
 
 .citedby-year {
   font-style: italic;
   font-weight: bold;
+  color: grey;
 }
 
 .citedby-doi {
   font-weight: bold;
+}
+
+.citedby-doi:visited {
+  font-style: underline;
+  color: grey;
+}
+
+.citedby-doi:active {
+  font-style: underline;
+  color: grey;
+}
+
+.citedby-doi:hover {
+  background-color: grey;
+  color: white;
 }

@@ -15,21 +15,20 @@ end
 get '/*' do
   doi = params['splat'].join('/')
   doi = CGI.unescape(doi)
-  citations = getCitationsFor(doi)[:citations]
-  haml :citations
+  haml :citations, :locals => {:citations => getCitationsFor(doi)[:citations]}
 end
 
 def getCitationsFor(doi)
   unixref = Net::HTTP.get "doi.crossref.org",
       "/servlet/getForwardLinks" +
       "?doi=#{doi}" +
-      "&usr=user" +
-      "&pwd=password"
+      "&usr=" +
+      "&pwd="
   unixref_doc = Document.new unixref
 
   jsonTop = {:citations => []}
 
-  unixref_doc.elements.each("*/journal_cite") do |elem|
+  unixref_doc.elements.each("//journal_cite") do |elem|
     citation = { 
       :journal_title => getJournalTitle(elem),
       :title => getTitle(elem),
@@ -58,8 +57,9 @@ end
 
 def getAuthors(elem)
   authors = ""
-  elem.elements.each("contributors/author") do |author|
-    authors += author.text + ", "
+  elem.elements.each("contributors/contributor") do |author|
+    authors += author.elements["given_name"].text + " "
+    authors += author.elements["surname"].text + ", "
   end
   authors
 end

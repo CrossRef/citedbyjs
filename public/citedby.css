@@ -14,11 +14,7 @@
 }
 
 .citedby-citation span {
-  margin-right: 4px;
-}
-
-.citedby-citation a {
-  margin-left: 10px;
+  margin-right: 2px;
 }
 
 .citedby-title {
@@ -30,6 +26,7 @@
 
 .citedby-journal-title {
   font-style: italic;
+  font-weight: bold;
   color: grey;
 }
 

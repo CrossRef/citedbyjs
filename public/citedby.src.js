@@ -1,6 +1,6 @@
 function CitedBy(scriptIdOrNode, additional) {
 
-    this.iframeSrcFragment = "http://localhost:9393/test/"
+    this.iframeSrcFragment = "http://localhost:9393/"
     this.queryOffset = 0
     this.queryLimit = 50
     this.abortTimeout = 15 * 1000

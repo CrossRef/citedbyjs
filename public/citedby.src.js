@@ -6,6 +6,7 @@ function CitedBy(scriptIdOrNode, additional) {
     this.abortTimeout = 15 * 1000
     this.scriptNode = undefined
     this.doi = undefined
+    this.containerNode = undefined
 
     CitedBy.prototype.start = function() {
 	if (additional) {
@@ -57,7 +58,19 @@ function CitedBy(scriptIdOrNode, additional) {
 	citedByIframe.setAttribute('width', parentWidth)
 	citedByIframe.setAttribute('height', parentHeight)
 	this.scriptNode.parentNode.replaceChild(citedByIframe, this.scriptNode)
+	this.containerNode = citedByIframe
     }
+
+    CitedBy.prototype.makeResizer = function() {
+	var cb = this
+	return function() {
+	    var pWidth = cb.containerNode.parentNode.clientWidth
+	    var pHeight = cb.containerNode.parentNode.clientHeight
+	    cb.containerNode.setAttribute('width', pWidth)
+	    cb.containerNode.setAttribute('height', pHeight)
+	}
+    }
+	
 
     CitedBy.prototype.populateWithError = function(message) {
     	this.parentNode.innerHTML = '<div id="citedby-error">' + message + '</div>'
@@ -70,7 +83,8 @@ var scriptTags = document.getElementsByTagName('script')
 for (var idx=0; idx<scriptTags.length; idx++) {
     var script = scriptTags[idx]
     if (script.getAttribute('src') == 'citedby.src.js') {
-	new CitedBy(script)
+	var cb = new CitedBy(script)
+	window.onresize = cb.makeResizer()
 	break
     }
 }

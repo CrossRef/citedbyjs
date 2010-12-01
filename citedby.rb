@@ -6,87 +6,24 @@ require 'cgi'
 require 'json'
 include REXML
 
-get '/test/*' do
-  JSON.dump({
-              :citations => [ 
-                             { 
-                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
-                               :journal_title => "New Journal of Physics",
-                               :year => "1999",
-                               :authors => "F Oesterhelt, M Rief and H E Gaub",
-                               :doi => "10.1088/1367-2630/1/1/006"
-                             },
-                             {
-                               :title => "Metal nanoparticles and their assemblies",
-                               :journal_title => "Chemical Society Reviews",
-                               :year => "2000",
-                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
-                               :doi => "10.1039/a904518j"
-                             },
-                             { 
-                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
-                               :journal_title => "New Journal of Physics",
-                               :year => "1999",
-                               :authors => "F Oesterhelt, M Rief and H E Gaub",
-                               :doi => "10.1088/1367-2630/1/1/006"
-                             },
-                             {
-                               :title => "Metal nanoparticles and their assemblies",
-                               :journal_title => "Chemical Society Reviews",
-                               :year => "2000",
-                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
-                               :doi => "10.1039/a904518j"
-                             },
-                             { 
-                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
-                               :journal_title => "New Journal of Physics",
-                               :year => "1999",
-                               :authors => "F Oesterhelt, M Rief and H E Gaub",
-                               :doi => "10.1088/1367-2630/1/1/006"
-                             },
-                             {
-                               :title => "Metal nanoparticles and their assemblies",
-                               :journal_title => "Chemical Society Reviews",
-                               :year => "2000",
-                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
-                               :doi => "10.1039/a904518j"
-                             },
-                             { 
-                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
-                               :journal_title => "New Journal of Physics",
-                               :year => "1999",
-                               :authors => "F Oesterhelt, M Rief and H E Gaub",
-                               :doi => "10.1088/1367-2630/1/1/006"
-                             },
-                             {
-                               :title => "Metal nanoparticles and their assemblies",
-                               :journal_title => "Chemical Society Reviews",
-                               :year => "2000",
-                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
-                               :doi => "10.1039/a904518j"
-                             },
-                             { 
-                               :title => "Single molecule force spectroscopy by AFM indicates helical structure of poly(ethylene-glycol) in water",
-                               :journal_title => "New Journal of Physics",
-                               :year => "1999",
-                               :authors => "F Oesterhelt, M Rief and H E Gaub",
-                               :doi => "10.1088/1367-2630/1/1/006"
-                             },
-                             {
-                               :title => "Metal nanoparticles and their assemblies",
-                               :journal_title => "Chemical Society Reviews",
-                               :year => "2000",
-                               :authors => "C. N. Ramachandra Rao, Giridhar U. Kulkarni, P. John Thomas and Peter P. Edwards",
-                               :doi => "10.1039/a904518j"
-                             }
-                            ],
-              :has_more => true
-            })
+get '/*', :provides => :json do
+  doi = params['splat'].join('/')
+  doi = CGI.unescape(doi)
+  JSON.dump getCitationsFor(doi)
 end
 
 get '/*' do
   doi = params['splat'].join('/')
   doi = CGI.unescape(doi)
+  citations = getCitationsFor(doi)[:citations]
+  if citations.length == 0 then
+    haml :citations_none
+  else 
+    haml :citations_list
+  end
+end
+
+def getCitationsFor(doi)
   unixref = Net::HTTP.get "doi.crossref.org",
       "/servlet/getForwardLinks" +
       "?doi=#{doi}" +
@@ -107,8 +44,8 @@ get '/*' do
 
     jsonTop[:citations] << citation
   end
-  
-  JSON.dump jsonTop
+
+  jsonTop
 end
 
 def getJournalTitle(elem)

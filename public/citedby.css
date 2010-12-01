@@ -2,23 +2,15 @@
   padding: 6px;
 }
 
+#citedby-citations {
+}
+
 #citedby-error {
   color: darkred;
 }
 
 #citedby-none {
   color: darkgrey;
-}
-
-#citedby-loading {
-  font-style: italic;
-  color: darkgrey;
-}
-
-#citedby-next {
-}
-
-#citedby-previous {
 }
 
 .citedby-citation span {

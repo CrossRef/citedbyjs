@@ -1,0 +1,17 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title "CrossRef Cited-by Links
+    %link{:rel => "stylesheet", :href => "citedby.css", :type => "text/css"}
+  %body  
+    #citedby-citations
+      - citations.each do |c|
+        .citedby-citation
+          .citedby-title= c.title
+          %div
+            %span.citedby-year= c.year
+            %span.citedby-journal-title= c.journal_title
+            %a.citedby-doi{:href => "http://dx.doi.org/" + c.doi}= c.doi
+          %div
+            %span.citedby-authors= c.authors
+      

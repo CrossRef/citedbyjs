@@ -1,10 +1,10 @@
-function CitedBy(elementIdOrNode, additional) {
+function CitedBy(scriptIdOrNode, additional) {
 
     this.iframeSrcFragment = "http://localhost:9393/test/"
     this.queryOffset = 0
     this.queryLimit = 50
     this.abortTimeout = 15 * 1000
-    this.parentNode = undefined
+    this.scriptNode = undefined
     this.doi = undefined
 
     CitedBy.prototype.start = function() {
@@ -14,10 +14,10 @@ function CitedBy(elementIdOrNode, additional) {
 	    this.queryLimit = additional.queryLimit || this.queryLimit
 	}
 	    
-	if (document.getElementById(elementIdOrNode)) {
-	    this.parentNode = document.getElementById(elementIdOrNode)
+	if (document.getElementById(scriptIdOrNode)) {
+	    this.scriptNode = document.getElementById(scriptIdOrNode)
 	} else {
-	    this.parentNode = elementIdOrNode
+	    this.scriptNode = scriptIdOrNode
 	}
 
 	this.doi = this.findDoi()
@@ -45,9 +45,18 @@ function CitedBy(elementIdOrNode, additional) {
     }
 
     CitedBy.prototype.populate = function() {
+	var parentWidth = this.scriptNode.parentNode.clientWidth
+	var parentHeight = this.scriptNode.parentNode.clientHeight
+	
 	var citedByIframe = document.createElement('iframe')
 	citedByIframe.setAttribute('src', this.iframeSrcFragment + this.doi)
-	this.parentNode.appendChild(citedByIFrame)
+	citedByIframe.setAttribute('frameborder', '0')
+	citedByIframe.setAttribute('hspace', '0')
+	citedByIframe.setAttribute('vspace', '0')
+	citedByIframe.setAttribute('style', 'overflow: auto;')
+	citedByIframe.setAttribute('width', parentWidth)
+	citedByIframe.setAttribute('height', parentHeight)
+	this.scriptNode.parentNode.replaceChild(citedByIframe, this.scriptNode)
     }
 
     CitedBy.prototype.populateWithError = function(message) {
@@ -56,3 +65,13 @@ function CitedBy(elementIdOrNode, additional) {
     
     this.start()
 }
+
+var scriptTags = document.getElementsByTagName('script')
+for (var idx=0; idx<scriptTags.length; idx++) {
+    var script = scriptTags[idx]
+    if (script.getAttribute('src') == 'citedby.src.js') {
+	new CitedBy(script)
+	break
+    }
+}
+  

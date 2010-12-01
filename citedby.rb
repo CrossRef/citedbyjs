@@ -16,11 +16,7 @@ get '/*' do
   doi = params['splat'].join('/')
   doi = CGI.unescape(doi)
   citations = getCitationsFor(doi)[:citations]
-  if citations.length == 0 then
-    haml :citations_none
-  else 
-    haml :citations_list
-  end
+  haml :citations
 end
 
 def getCitationsFor(doi)

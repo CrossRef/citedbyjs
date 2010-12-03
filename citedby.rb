@@ -5,49 +5,74 @@ require 'net/http'
 require 'cgi'
 require 'json'
 require 'dm-core'
-require 'model.rb'
+require 'dm-migrations'
+require 'haml'
 require 'sanctions.rb'
 include REXML
+
+unsanctioned_doi = "The owner of this DOI has not " \
+                        + "sanctioned the use of the Cited-by widget " \
+                        + "for their content."
 
 configure do
   @db_config = YAML.load_file "#{Dir.pwd}/config/database.yaml"
   DataMapper.finalize
   DataMapper.setup(:default, @db_config['db'])
+  DataMapper.auto_upgrade!
 end
 
-set :data_to_sanctionable_name, lambda(doi) do
-  return ""
+def data_to_sanctionable_name(doi)
+  unixref = Net::HTTP.get "www.crossref.org",
+      "/openurl/?id=doi:#{doi}" +
+      "&noredirect=true" +
+      "&pid=kward@crossref.org" +
+      "&format=unixref"
+  unixref_doc = Document.new unixref
+
+  unixref_doc.elements["//doi_record"].attributes["owner"]
 end
 
 get '/*', :provides => :json do
   doi = params['splat'].join('/')
-  doi = CGI.unescape(doi)
-  JSON.dump getCitationsFor(doi)
+  c = get_credentials doi
+
+  if c[:sanctioned] then
+    doi = CGI.unescape doi
+    JSON.dump get_citations(doi, c)
+  else 
+    JSON.dump({:error => unsanctioned_doi})
+  end
 end
 
 get '/*' do
   doi = params['splat'].join('/')
-  doi = CGI.unescape(doi)
-  haml :citations, :locals => {:citations => getCitationsFor(doi)[:citations]}
+  c = get_credentials doi
+
+  if c[:sanctioned] then
+    doi = CGI.unescape doi
+    haml :citations, :locals => {:citations => get_citations(doi, c)[:citations]}
+  else
+    haml :error, :locals => {:error_message => unsanctioned_doi}
+  end
 end
 
-def getCitationsFor(doi)
+def get_citations(doi, credentials)
   unixref = Net::HTTP.get "doi.crossref.org",
       "/servlet/getForwardLinks" +
       "?doi=#{doi}" +
-      "&usr=plos" +
-      "&pwd=plos1"
+      "&usr=#{credentials[:username]}" +
+      "&pwd=#{credentials[:password]}"
   unixref_doc = Document.new unixref
 
   jsonTop = {:citations => []}
 
   unixref_doc.elements.each("//journal_cite") do |elem|
     citation = { 
-      :journal_title => getJournalTitle(elem),
-      :title => getTitle(elem),
-      :year => getYear(elem),
-      :authors => getAuthors(elem),
-      :doi => getDoi(elem)
+      :journal_title => get_journal_title(elem),
+      :title => get_title(elem),
+      :year => get_year(elem),
+      :authors => get_authors(elem),
+      :doi => get_doi(elem)
     }
 
     jsonTop[:citations] << citation
@@ -56,19 +81,19 @@ def getCitationsFor(doi)
   jsonTop
 end
 
-def getJournalTitle(elem)
+def get_journal_title(elem)
   elem.elements["journal_title"].text
 end
 
-def getTitle(elem)
+def get_title(elem)
   elem.elements["article_title"].text
 end
 
-def getYear(elem)
+def get_year(elem)
   elem.elements["year"].text
 end
 
-def getAuthors(elem)
+def get_authors(elem)
   authors = ""
   elem.elements.each("contributors/contributor") do |author|
     authors += author.elements["given_name"].text + " "
@@ -77,6 +102,6 @@ def getAuthors(elem)
   authors
 end
 
-def getDoi(elem)
+def get_doi(elem)
   elem.elements["doi"].text
 end

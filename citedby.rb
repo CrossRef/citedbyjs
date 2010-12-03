@@ -15,7 +15,7 @@ configure do
   DataMapper.setup(:default, @db_config['db'])
 end
 
-set :data_to_sanction_name, lambda(doi) do
+set :data_to_sanctionable_name, lambda(doi) do
   return ""
 end
 

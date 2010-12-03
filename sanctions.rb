@@ -7,12 +7,16 @@ module Sinatra
     module Helpers
 
       def sanctioned?(data)
-        sanction_name = options.data_to_sanction_name.call(data)
-        Sanction.count(:name => sanction_name) > 0
+        if has_credence?(data) then
+          return true
+        else
+          sanction_name = options.data_to_sanctionable_name.call(data)
+          Sanction.count(:name => sanction_name) > 0
+        end
       end
 
       def has_credence?(data)
-        Credence.count(:to => data)
+        Credence.count(:to => data) > 0
       end
 
       def give_credence!(data)
@@ -25,7 +29,7 @@ module Sinatra
     def self.registered(app)
       app.helpers Sanctions::Helpers
 
-      app.set :data_to_sanction_name, lambda { return "" }
+      app.set :data_to_sanctionable_name, lambda { return "" }
     end
   end
     

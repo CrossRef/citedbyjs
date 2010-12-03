@@ -4,7 +4,20 @@ require 'rexml/document'
 require 'net/http'
 require 'cgi'
 require 'json'
+require 'dm-core'
+require 'model.rb'
+require 'sanctions.rb'
 include REXML
+
+configure do
+  @db_config = YAML.load_file "#{Dir.pwd}/config/database.yaml"
+  DataMapper.finalize
+  DataMapper.setup(:default, @db_config['db'])
+end
+
+set :data_to_sanction_name, lambda(doi) do
+  return ""
+end
 
 get '/*', :provides => :json do
   doi = params['splat'].join('/')
@@ -22,8 +35,8 @@ def getCitationsFor(doi)
   unixref = Net::HTTP.get "doi.crossref.org",
       "/servlet/getForwardLinks" +
       "?doi=#{doi}" +
-      "&usr=" +
-      "&pwd="
+      "&usr=plos" +
+      "&pwd=plos1"
   unixref_doc = Document.new unixref
 
   jsonTop = {:citations => []}

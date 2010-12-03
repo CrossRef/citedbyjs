@@ -1,0 +1,2 @@
+db: mysql://root:root@localhost/pmid2doi
+

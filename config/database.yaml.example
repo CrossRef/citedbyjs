@@ -1,2 +1,2 @@
-db: mysql://root:root@localhost/pmid2doi
+db: mysql://root:root@localhost/citedby
 

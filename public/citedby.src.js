@@ -1,20 +1,11 @@
-function CitedBy(scriptIdOrNode, additional) {
+function CitedBy(scriptIdOrNode) {
 
     this.iframeSrcFragment = "http://localhost:9393/"
-    this.queryOffset = 0
-    this.queryLimit = 50
-    this.abortTimeout = 15 * 1000
     this.scriptNode = undefined
     this.doi = undefined
     this.containerNode = undefined
 
     CitedBy.prototype.start = function() {
-	if (additional) {
-	    this.onSuccess = additional.onSuccess || this.onSuccess
-	    this.onFailure = additional.onFailure || this.onFailure
-	    this.queryLimit = additional.queryLimit || this.queryLimit
-	}
-	    
 	if (document.getElementById(scriptIdOrNode)) {
 	    this.scriptNode = document.getElementById(scriptIdOrNode)
 	} else {

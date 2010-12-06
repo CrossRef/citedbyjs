@@ -20,12 +20,10 @@ function CitedBy(scriptObj) {
 
     CitedBy.prototype.findDoi = function() {
 	var dcId = undefined
-	$('meta').each(function() {
-	    if ($(this).attr('name').toLowerCase() == 'dc.identifier') {
-		dcId = ($(this).attr('content')
-			.replace(/^info:doi\//, '')
-			.replace(/^doi:/, ''))
-	    }
+	$('meta[name="dc.identifier"]').each(function() {
+	    dcId = ($(this).attr('content')
+		    .replace(/^info:doi\//, '')
+		    .replace(/^doi:/, ''))
 	})
 	return dcId
     }
@@ -50,10 +48,8 @@ function CitedBy(scriptObj) {
     CitedBy.prototype.makeResizer = function() {
 	var cb = this
 	return function() {
-	    cb.containerObj.attr({
-		width: this.containerObj.parent().width(),
-		height: this.containerObj.parent().height()
-	    })
+	    cb.containerObj.width(cb.containerObj.parent().width())
+	    cb.containerObj.height(cb.containerObj.parent().height())
 	}
     }
 }

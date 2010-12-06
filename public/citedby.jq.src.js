@@ -51,7 +51,7 @@ function CitedBy(scriptObj) {
 	var cb = this
 	return function() {
 	    cb.containerObj.attr({
-		width: this.containerObj.parent().width()
+		width: this.containerObj.parent().width(),
 		height: this.containerObj.parent().height()
 	    })
 	}

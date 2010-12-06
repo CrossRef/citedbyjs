@@ -1,17 +1,12 @@
-function CitedBy(scriptIdOrNode) {
+function CitedBy(scriptObj) {
 
     this.iframeSrcFragment = "http://localhost:9393/"
-    this.scriptNode = undefined
+    this.scriptObj = undefined
     this.doi = undefined
-    this.containerNode = undefined
+    this.containerObj = undefined
 
     CitedBy.prototype.start = function() {
-	if (document.getElementById(scriptIdOrNode)) {
-	    this.scriptNode = document.getElementById(scriptIdOrNode)
-	} else {
-	    this.scriptNode = scriptIdOrNode
-	}
-
+	this.scriptObj = scriptObj
 	this.doi = this.findDoi()
 
 	if (this.doi) {
@@ -19,64 +14,47 @@ function CitedBy(scriptIdOrNode) {
 	} else {
 	    this.populateWithError('Couldn\'t find a meta tag for dc.identifier')
 	}
+
+	$(window).resize(this.makeResizer())
     }
 
     CitedBy.prototype.findDoi = function() {
-	var metaElems = document.getElementsByTagName('meta')
-	for (var idx=0; idx<metaElems.length; idx++) {
-	    var elem = metaElems[idx]
-	    var name = elem.getAttribute('name')
-	    if (name.toLowerCase() == 'dc.identifier') {
-		var content = elem.getAttribute('content')
-		content = content.replace(/^info:doi\//, '')
-		content = content.replace(/^doi:/, '')
-		return content
-	    }
-	}
-	return undefined
+	var dcId = undefined
+	$('meta[name="dc.identifier"]').each(function() {
+	    dcId = ($(this).attr('content')
+		    .replace(/^info:doi\//, '')
+		    .replace(/^doi:/, ''))
+	})
+	return dcId
     }
 
     CitedBy.prototype.populate = function() {
-	var parentWidth = this.scriptNode.parentNode.clientWidth
-	var parentHeight = this.scriptNode.parentNode.clientHeight
-	
-	var citedByIframe = document.createElement('iframe')
-	citedByIframe.setAttribute('src', this.iframeSrcFragment + this.doi)
-	citedByIframe.setAttribute('frameborder', '0')
-	citedByIframe.setAttribute('hspace', '0')
-	citedByIframe.setAttribute('vspace', '0')
-	citedByIframe.setAttribute('style', 'overflow: auto;')
-	citedByIframe.setAttribute('width', parentWidth)
-	citedByIframe.setAttribute('height', parentHeight)
-	this.scriptNode.parentNode.replaceChild(citedByIframe, this.scriptNode)
-	this.containerNode = citedByIframe
+	this.containerObj = $('<iframe/>', {
+	    src: this.iframeSrcFragment + this.doi,
+	    frameborder: 0,
+	    hspace: 0,
+	    vspace: 0,
+	    style: 'overflow: auto',
+	    width: this.scriptObj.parent().width(),
+	    height: this.scriptObj.parent().height()
+	})
+	this.scriptObj.replaceWith(this.containerObj)
+    }
+
+    CitedBy.prototype.populateWithError = function(message) {
+	this.scriptObj.replaceWith($('<div/>', {
+	    id: 'citedby-error'
+	}))
+	$('#citedby-error').text(message)
     }
 
     CitedBy.prototype.makeResizer = function() {
 	var cb = this
 	return function() {
-	    var pWidth = cb.containerNode.parentNode.clientWidth
-	    var pHeight = cb.containerNode.parentNode.clientHeight
-	    cb.containerNode.setAttribute('width', pWidth)
-	    cb.containerNode.setAttribute('height', pHeight)
+	    cb.containerObj.width(cb.containerObj.parent().width())
+	    cb.containerObj.height(cb.containerObj.parent().height())
 	}
     }
-	
-
-    CitedBy.prototype.populateWithError = function(message) {
-    	this.parentNode.innerHTML = '<div id="citedby-error">' + message + '</div>'
-    }
-    
-    this.start()
 }
 
-var scriptTags = document.getElementsByTagName('script')
-for (var idx=0; idx<scriptTags.length; idx++) {
-    var script = scriptTags[idx]
-    if (script.getAttribute('src') == 'citedby.src.js') {
-	var cb = new CitedBy(script)
-	window.onresize = cb.makeResizer()
-	break
-    }
-}
-  
+new CitedBy($('script[src="citedby.jq.src.js"]')).start()

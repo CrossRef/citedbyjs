@@ -6,10 +6,12 @@
 }
 
 #citedby-error {
+  padding: 6px;
   color: darkred;
 }
 
 #citedby-none {
+  padding: 6px;
   color: darkgrey;
 }
 

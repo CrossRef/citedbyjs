@@ -42,7 +42,10 @@ function CitedBy(scriptObj) {
     }
 
     CitedBy.prototype.populateWithError = function(message) {
-	$('<div/>', {id: 'citedby-error'}).appendTo(this.parentObj)
+	this.scriptObj.replaceWith($('<div/>', {
+	    id: 'citedby-error'
+	}))
+	$('#citedby-error').text(message)
     }
 
     CitedBy.prototype.makeResizer = function() {

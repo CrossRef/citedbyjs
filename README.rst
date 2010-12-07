@@ -30,7 +30,7 @@ Below is a complete example.
       </head>
       <body>
         <div>
-          <script src="citedby.labs.crossref.org/citedby.min.js"></script>
+          <script src="http://citedby.labs.crossref.org/citedby.min.js"></script>
         </div>
       </body>
     </html>

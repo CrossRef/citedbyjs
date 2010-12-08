@@ -26,9 +26,12 @@ describe 'Cited-by widget server' do
 
   before(:each) do
     DataMapper.auto_migrate!
+    @sanction = Sanction.create(:name => "10.1371", :username => "plos", :password => "plos1")
+  end
 
-    @sanction = Sanction.new(:name => "10.1371", :username => "plos", :password => "plos1")
-    @sanction.save
+  after(:all) do
+    # Clear the database (in case it is immediately used for production.)
+    DataMapper.auto_migrate!
   end
 
   it "returns error for an unsanctioned DOI" do
@@ -42,7 +45,7 @@ describe 'Cited-by widget server' do
   end
 
   it "returns success for a sanctioned DOI with credence" do
-    Credence.new(:to => @sanctioned_doi, :when => Time.now(), :sanction => @sanction).save()
+    Credence.create(:to => @sanctioned_doi, :when => Time.now, :sanction => @sanction)
     get "/#{@sactioned_doi}"
     last_response.body.should include 'citedby-citations'
   end

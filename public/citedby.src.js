@@ -1,6 +1,6 @@
 function CitedBy(scriptObj) {
 
-    this.iframeSrcFragment = "http://localhost:9393/"
+    this.serverUrl = "http://localhost:9393/"
     this.scriptObj = undefined
     this.doi = undefined
     this.containerObj = undefined
@@ -30,7 +30,7 @@ function CitedBy(scriptObj) {
 
     CitedBy.prototype.populate = function() {
 	this.containerObj = $('<iframe/>', {
-	    src: this.iframeSrcFragment + this.doi,
+	    src: this.serverUrl + this.doi,
 	    frameborder: 0,
 	    hspace: 0,
 	    vspace: 0,
@@ -57,4 +57,4 @@ function CitedBy(scriptObj) {
     }
 }
 
-new CitedBy($('script[src="citedby.jq.src.js"]')).start()
+new CitedBy($('script[src="http://localhost:9393/citedby.src.js"]')).start()

@@ -19,14 +19,14 @@
   margin-right: 2px;
 }
 
-.citedby-title {
+.citedby-work-title {
 }
 
 .citedby-authors {
   color: grey;
 }
 
-.citedby-journal-title {
+.citedby-container-title {
   font-style: italic;
   font-weight: bold;
   color: grey;

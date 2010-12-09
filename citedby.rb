@@ -66,31 +66,68 @@ def get_citations(doi, credentials)
 
   jsonTop = {:citations => []}
 
-  unixref_doc.elements.each("//journal_cite") do |elem|
-    citation = { 
-      :journal_title => get_journal_title(elem),
-      :title => get_title(elem),
-      :year => get_year(elem),
-      :authors => get_authors(elem),
-      :doi => get_doi(elem)
-    }
+  cite_types = [ { :elem => 'journal_cite',
+                   :fn => method(:parse_journal_cite) },
+                 { :elem => 'conf_cite',
+                   :fn => method(:parse_standard_cite) },
+                 { :elem => 'book_cite',
+                   :fn => method(:parse_standard_cite) },
+                 { :elem => 'dissertation_cite',
+                   :fn => method(:parse_dissertation_cite) },
+                 { :elem => 'report_cite',
+                   :fn => method(:parse_standard_cite) },
+                 { :elem => 'standard_cite',
+                   :fn => method(:parse_standard_cite) },
+                 { :elem => 'database_cite',
+                   :fn => method(:parse_database_cite) } ]
 
-    jsonTop[:citations] << citation
+  cite_types.each do |cite_type|
+    unixref_doc.elements.each("//" + cite_type[:elem]) do |elem|
+      jsonTop[:citations] << cite_type[:fn].call(elem)
+    end
   end
 
   jsonTop
 end
 
-def get_journal_title(elem)
-  elem.elements["journal_title"].text
+def parse_journal_cite(elem)
+  {
+    :container_title => elem.elements['journal_title'].text,
+    :work_title => elem.elements['article_title'].text,
+    :year => elem.elements['year'].text,
+    :authors => get_authors(elem),
+    :doi => elem.elements['doi'].text
+  }
 end
 
-def get_title(elem)
-  elem.elements["article_title"].text
+def parse_database_cite(elem)
+  {
+    :work_title => elem.elements['title'].text,
+    :container_title => elem.elements['institution_name'].text,
+    :year => elem.elements['year'].text,
+    :authors => get_authors(elem),
+    :doi => elem.elements['doi'].text
+  }
 end
 
-def get_year(elem)
-  elem.elements["year"].text
+def parse_dissertation_cite(elem)
+  {
+    :work_title => elem.elements['title'].text,
+    :container_title => elem.elements['institution_name'].text,
+    :year => elem.elements['year'].text,
+    :authors => get_authors(elem),
+    :doi => elem.elements['doi'].text
+  }
+end
+
+def parse_standard_cite(elem)
+  {
+    :work_title => elem.elements['volume_title'].text,
+    :container_title => elem.elements['series_title'].text,
+    :year => elem.elements['year'].text,
+    :authors => get_authors(elem),
+    :doi => elem.elements['doi'].text
+  }
 end
 
 def get_authors(elem)
@@ -101,7 +138,4 @@ def get_authors(elem)
   end
   authors
 end
-
-def get_doi(elem)
-  elem.elements["doi"].text
-end
+  

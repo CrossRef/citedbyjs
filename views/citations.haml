@@ -12,9 +12,9 @@
       #citedby-citations
         - citations.each do |c|
           .citedby-citation
-            %span.citedby-title= c[:title]
+            %span.citedby-work-title= c[:work_title]
             %div
-              %span.citedby-journal-title= c[:journal_title]
+              %span.citedby-container-title= c[:container_title]
               %span.citedby-year= c[:year]
             %div
               %span.citedby-authors= c[:authors]

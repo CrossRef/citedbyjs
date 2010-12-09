@@ -64,7 +64,7 @@ def get_citations(doi, credentials)
       "&pwd=#{credentials[:password]}"
   unixref_doc = Document.new unixref
 
-  jsonTop = {:citations => []}
+  json_top = {:citations => []}
 
   cite_types = [ { :elem => 'journal_cite',
                    :fn => method(:parse_journal_cite) },
@@ -83,11 +83,11 @@ def get_citations(doi, credentials)
 
   cite_types.each do |cite_type|
     unixref_doc.elements.each("//" + cite_type[:elem]) do |elem|
-      jsonTop[:citations] << cite_type[:fn].call(elem)
+      json_top[:citations] << cite_type[:fn].call(elem)
     end
   end
 
-  jsonTop
+  json_top
 end
 
 def parse_journal_cite(elem)

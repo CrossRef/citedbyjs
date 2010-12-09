@@ -35,28 +35,28 @@ describe 'Cited-by widget server' do
   end
 
   it "returns error for an unsanctioned DOI" do
-    get "/#{@unsactioned_doi}"
+    get "/#{@unsanctioned_doi}"
     last_response.body.should include 'citedby-error'
   end
 
   it "returns success for a sanctioned DOI without credence" do
-    get "/#{@sactioned_doi}"
+    get "/#{@sanctioned_doi}"
     last_response.body.should include 'citedby-citations'
   end
 
   it "returns success for a sanctioned DOI with credence" do
     Credence.create(:to => @sanctioned_doi, :when => Time.now, :sanction => @sanction)
-    get "/#{@sactioned_doi}"
+    get "/#{@sanctioned_doi}"
     last_response.body.should include 'citedby-citations'
   end
 
-  it "gives crecence on the first encounter of a sanctioned DOI" do
-    get "/#{@sactioned_doi}"
-    assert(Credence.count(:to => @sanctioned_doi) > 0)
+  it "gives credence on the first encounter of a sanctioned DOI" do
+    get "/#{@sanctioned_doi}"
+    1.should equal Credence.count(:to => @sanctioned_doi)
   end
 
   it "returns error for a DOI without credence or sanction" do
-    get "/#{@unsactioned_doi}"
+    get "/#{@unsanctioned_doi}"
     last_response.body.should include 'citedby-error'
   end
 
@@ -64,7 +64,7 @@ describe 'Cited-by widget server' do
     @sanction.password = 'invalid_password'
     @sanction.save
 
-    get "/#{@sactioned_doi}"
+    get "/#{@sanctioned_doi}"
     last_response.body.should include 'citedby-error'
   end
 

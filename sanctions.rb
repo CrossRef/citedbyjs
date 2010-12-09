@@ -19,7 +19,7 @@ module Sinatra
         sanction = nil
 
         if credence?(data) then
-          c = Crefence.first(:to => data)
+          c = Credence.first(:to => data)
           sanction = c.sanction
         else
           sanction_name = data_to_sanctionable_name(data)
